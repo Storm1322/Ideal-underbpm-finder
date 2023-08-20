@@ -9,12 +9,66 @@ import static java.lang.Math.floor;
 
 public class IdealBpmTester {
     static int i = 0;
+    static List<List<String>> listOfLists;
+    static String[][] array;
+    static String[] tableCategories = {"BPM", "Offset Per Cycle", "Clicks Until Uiss"};
 
     static Map<Double,Double> idealBPMList = new HashMap<>();
+    
+    public IdealBpmTester(double bpm, double od){
+        double ODLCT = odlctFinder(od);
+        listOfLists = new ArrayList<>();
+        
+        for(double i = bpm; i > 0; i = i - 1.0) {
+            idealBPMList.put(i,idealBpm(bpm, ODLCT, i, 0));
+            double clicksUntilMiss = floor(ODLCT / ((15000 / i) - (15000 / bpm)));
+            
+            double min = Double.MAX_VALUE;
+            double minval = 0;
+            
+            for (Map.Entry<Double,Double> entry : idealBPMList.entrySet()) {
+                Double key = entry.getKey();
+                Double value = entry.getValue();
+                if(value>=0){
+                    List<String> list = new ArrayList<>();
+                    list.add(String.valueOf(key));
+                    list.add(String.valueOf(value));
+                    list.add(String.valueOf(clicksUntilMiss));
+                    System.out.println(list);
+                    listOfLists.add(list);
+                }
+            }
+        }
+        
+        array = new String[listOfLists.size()][3];
+        
+        int j = 0;
+        for(List<String> entry: listOfLists){
+            array[j++] = entry.toArray(new String[1]);
+        }
+        
+        /*
+        double min = Double.MAX_VALUE;
+        double minval = 0;
+        
+        for (Map.Entry<Double,Double> entry : idealBPMList.entrySet()) {
+            Double key = entry.getKey();
+            Double value = entry.getValue();
+            if(value>=0){
+               min = key;
+               minval = value;
+               System.out.println(min + "," + minval);
+            }
+        }
+        */
+        BpmTable.main(null);
+    }
+    
     public static void main(String[] args) {
-        int bpm = 220;
-        for(double i = bpm; i > 0; i = i - 0.1) {
-            idealBPMList.put(i,idealBpm(bpm, 99.5, i, 0));
+        double bpm = Double.parseDouble(GUI.jTextField2.getText());
+        double ODLCT = odlctFinder(Double.parseDouble(GUI.jTextField3.getText()));
+        for(double i = bpm; i > 0; i = i - 1.0) {
+            idealBPMList.put(i,idealBpm(bpm, ODLCT, i, 0));
         }
 
         double min = Double.MAX_VALUE;
@@ -23,13 +77,12 @@ public class IdealBpmTester {
         for (Map.Entry<Double,Double> entry : idealBPMList.entrySet()) {
             Double key = entry.getKey();
             Double value = entry.getValue();
-            if(value>=0 && key <= min){
+            if(value>=0){
                min = key;
                minval = value;
+               System.out.println(min + "," + minval);
             }
         }
-        System.out.println(min + "," + minval);
-
     }
     
     public static double idealBpm(double song_bpm, double ODLCT, double IUBPM_guess, double firstHitLatency){
@@ -41,7 +94,7 @@ public class IdealBpmTester {
             return firstHitLatency >= 0 ? firstHitLatency : -1.0;
     }
 
-    public static double odFinder(double od){
+    public static double odlctFinder(double od){
         int base = 200;
         return base - 10 * od - 0.5;
     }
