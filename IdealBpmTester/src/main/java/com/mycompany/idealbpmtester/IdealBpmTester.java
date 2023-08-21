@@ -42,24 +42,7 @@ public class IdealBpmTester {
     }
     
     public static void main(String[] args) {
-        double bpm = Double.parseDouble(GUI.jTextField2.getText());
-        double ODLCT = odlctFinder(Double.parseDouble(GUI.jTextField3.getText()));
-        for(double i = bpm; i > 0; i = i - 1.0) {
-            idealBPMList.put(i,idealBpm(bpm, ODLCT, i, 0));
-        }
-
-        double min = Double.MAX_VALUE;
-        double minval = 0;
-
-        for (Map.Entry<Double,Double> entry : idealBPMList.entrySet()) {
-            Double key = entry.getKey();
-            Double value = entry.getValue();
-            if(value>=0){
-               min = key;
-               minval = value;
-               System.out.println(min + "," + minval);
-            }
-        }
+        Gui.main(null);
     }
     
     public static double idealBpm(double song_bpm, double ODLCT, double IUBPM_guess, double firstHitLatency){
