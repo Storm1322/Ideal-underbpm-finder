@@ -8,7 +8,6 @@ import java.util.Map;
 import static java.lang.Math.floor;
 
 public class IdealBpmTester {
-    static int i = 0;
     static List<List<String>> listOfLists;
     static String[][] array;
     static String[] tableCategories = {"BPM", "Offset Per Cycle", "Clicks Until Uiss"};
@@ -19,24 +18,17 @@ public class IdealBpmTester {
         double ODLCT = odlctFinder(od);
         listOfLists = new ArrayList<>();
         
-        for(double i = bpm; i > 0; i = i - 1.0) {
+        for(double i = bpm; i > 2 * bpm / 3; i = i - 1.0) {
             idealBPMList.put(i,idealBpm(bpm, ODLCT, i, 0));
             double clicksUntilMiss = floor(ODLCT / ((15000 / i) - (15000 / bpm)));
             
-            double min = Double.MAX_VALUE;
-            double minval = 0;
-            
-            for (Map.Entry<Double,Double> entry : idealBPMList.entrySet()) {
-                Double key = entry.getKey();
-                Double value = entry.getValue();
-                if(value>=0){
-                    List<String> list = new ArrayList<>();
-                    list.add(String.valueOf(key));
-                    list.add(String.valueOf(value));
-                    list.add(String.valueOf(clicksUntilMiss));
-                    System.out.println(list);
-                    listOfLists.add(list);
-                }
+            if(idealBpm(bpm, ODLCT, i, 0) >= 0 && idealBpm(bpm, ODLCT, i, 0) < 80 - 6 * od){
+                List<String> list = new ArrayList<>();
+                list.add(String.valueOf(i));
+                list.add(String.valueOf(idealBpm(bpm, ODLCT, i, 0)));
+                list.add(String.valueOf(clicksUntilMiss));
+                System.out.println(list);
+                listOfLists.add(list);
             }
         }
         
