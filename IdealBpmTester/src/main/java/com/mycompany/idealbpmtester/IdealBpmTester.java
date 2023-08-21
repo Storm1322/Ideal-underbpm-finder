@@ -33,26 +33,11 @@ public class IdealBpmTester {
         }
         
         array = new String[listOfLists.size()][3];
-        
         int j = 0;
         for(List<String> entry: listOfLists){
             array[j++] = entry.toArray(new String[1]);
         }
         
-        /*
-        double min = Double.MAX_VALUE;
-        double minval = 0;
-        
-        for (Map.Entry<Double,Double> entry : idealBPMList.entrySet()) {
-            Double key = entry.getKey();
-            Double value = entry.getValue();
-            if(value>=0){
-               min = key;
-               minval = value;
-               System.out.println(min + "," + minval);
-            }
-        }
-        */
         BpmTable.main(null);
     }
     
